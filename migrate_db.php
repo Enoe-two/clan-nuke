@@ -1,16 +1,41 @@
 <?php
+/**
+ * ============================================================
+ *  CFWT - Script de migration de base de données Railway
+ *  Copie l'ancienne BDD (hors projet) vers la nouvelle (dans projet)
+ * ============================================================
+ *
+ *  UTILISATION :
+ *  1. Renseigne les variables ci-dessous (ou passe par les variables d'env)
+ *  2. Dépose ce fichier à la racine de ton site Railway
+ *  3. Ouvre l'URL  https://ton-site.railway.app/migrate_db.php?secret=CFWT_MIGRATE
+ *  4. Supprime ce fichier une fois la migration terminée !
+ *
+ *  VARIABLES D'ENVIRONNEMENT (prioritaires sur les constantes) :
+ *    OLD_DATABASE_URL  → DATABASE_URL de l'ancienne BDD (hors projet)
+ *    NEW_DATABASE_URL  → DATABASE_URL de la nouvelle BDD (dans le projet)
+ *    MIGRATE_SECRET    → Mot de passe pour accéder à ce script
+ * ============================================================
+ */
 
-
+// ───────────────────────────────────────────────────────────
+//  🔐 PROTECTION PAR MOT DE PASSE
+// ───────────────────────────────────────────────────────────
 $secret = getenv('MIGRATE_SECRET') ?: 'CFWT_MIGRATE'; // Change ici si tu veux
 if (($_GET['secret'] ?? '') !== $secret) {
     http_response_code(403);
     die('<h2>⛔ Accès refusé — ajoute ?secret=<ton_secret> dans l\'URL</h2>');
 }
 
+// ───────────────────────────────────────────────────────────
+//  🔌 CONFIGURATION DES DEUX BASES DE DONNÉES
+//  Option A : renseigne les DATABASE_URL directement ici
+//  Option B : passe-les en variables d'environnement Railway
+// ───────────────────────────────────────────────────────────
 
 // ⚠️  REMPLACE CES VALEURS par tes vraies DATABASE_URL Railway
 $OLD_DATABASE_URL = getenv('OLD_DATABASE_URL') ?: 'mysql://root:JwaAIaqRIRzIGarebfqimmiKHDfnARiE@mysql.railway.internal:3306/railway';
-$NEW_DATABASE_URL = getenv('NEW_DATABASE_URL') ?: getenv('mysql://root:bLiopnzwsahJVYcbTbTxYksPHDxXzqnV@mysql.railway.internal:3306/railway') ?: '';
+$NEW_DATABASE_URL = getenv('NEW_DATABASE_URL') ?: 'mysql://root:bLiopnzwsahJVYcbTbTxYksPHDxXzqnV@mysql.railway.internal:3306/railway';
 
 if (!$OLD_DATABASE_URL || !$NEW_DATABASE_URL) {
     die('<h2>❌ Configure OLD_DATABASE_URL et NEW_DATABASE_URL</h2>');
