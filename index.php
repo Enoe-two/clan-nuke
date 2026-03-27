@@ -4,7 +4,7 @@ require_once 'config.php';
 // Récupérer les paramètres d'apparence
 $appearance = getAppearanceSettings($pdo);
 
-// Statistiques (si activées)
+
 $stats = [];
 if ($appearance['show_stats_home'] == '1') {
     $stats = [
